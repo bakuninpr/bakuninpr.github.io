@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teaching | Rob</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #1a1a2e;
+            --paper: #faf9f7;
+            --accent: #2d5a7b;
+            --accent-light: #4a7c9b;
+            --muted: #6b7280;
+            --grid: rgba(45, 90, 123, 0.08);
+            --highlight: #e8f1f5;
+            --success: #2d7b5a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.7;
+            font-weight: 400;
+            overflow-x: hidden;
+        }
+
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            background-image: 
+                linear-gradient(var(--grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+            background-size: 60px 60px;
+            opacity: 0.7;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: linear-gradient(to bottom, var(--paper) 60%, transparent);
+        }
+
+        .nav-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--ink);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a.active {
+            color: var(--accent);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        main {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Page header */
+        .page-header {
+            padding: 10rem 8% 5rem;
+            max-width: 900px;
+        }
+
+        .page-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeSlideUp 0.8s ease forwards;
+            animation-delay: 0.2s;
+        }
+
+        .page-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 400;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeSlideUp 0.8s ease forwards;
+            animation-delay: 0.4s;
+        }
+
+        .page-description {
+            font-size: 1.15rem;
+            color: var(--muted);
+            max-width: 600px;
+            opacity: 0;
+            animation: fadeSlideUp 0.8s ease forwards;
+            animation-delay: 0.6s;
+        }
+
+        /* Section styling */
+        section {
+            padding: 4rem 8%;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: baseline;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .section-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--accent);
+        }
+
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-weight: 400;
+            letter-spacing: -0.02em;
+        }
+
+        .section-line {
+            flex: 1;
+            height: 1px;
+            background: var(--grid);
+        }
+
+        /* Course cards */
+        .courses-grid {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .course-card {
+            background: white;
+            border: 1px solid rgba(0,0,0,0.06);
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .course-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+        }
+
+        .course-sidebar {
+            background: var(--ink);
+            color: var(--paper);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .course-code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            opacity: 0.6;
+            margin-bottom: 0.5rem;
+        }
+
+        .course-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .course-semester {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .semester-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--success);
+            border-radius: 50%;
+        }
+
+        .course-content {
+            padding: 2rem;
+        }
+
+        .course-description {
+            color: var(--muted);
+            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .course-topics {
+            margin-bottom: 2rem;
+        }
+
+        .topics-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            margin-bottom: 0.75rem;
+        }
+
+        .topics-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .topic-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            padding: 0.4rem 0.8rem;
+            background: var(--highlight);
+            color: var(--accent);
+        }
+
+        .course-materials {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .material-link {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--ink);
+            text-decoration: none;
+            padding: 0.6rem 1.2rem;
+            border: 1px solid var(--grid);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .material-link:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .material-link svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Resources section */
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .resource-card {
+            background: white;
+            border: 1px solid rgba(0,0,0,0.06);
+            padding: 1.5rem;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+        .resource-card:hover {
+            border-color: var(--accent);
+        }
+
+        .resource-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--highlight);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .resource-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--accent);
+        }
+
+        .resource-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .resource-desc {
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        /* Office hours */
+        .office-hours {
+            background: var(--ink);
+            color: var(--paper);
+            padding: 3rem;
+            max-width: 500px;
+        }
+
+        .office-hours h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+        }
+
+        .hours-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .hours-item:last-child {
+            border-bottom: none;
+        }
+
+        .hours-day {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: rgba(255,255,255,0.6);
+        }
+
+        .hours-time {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+        }
+
+        .hours-note {
+            margin-top: 1.5rem;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.6);
+            font-style: italic;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 8%;
+            border-top: 1px solid var(--grid);
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--muted);
+            letter-spacing: 0.05em;
+        }
+
+        .footer-nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .footer-nav a {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--muted);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: color 0.3s ease;
+        }
+
+        .footer-nav a:hover {
+            color: var(--accent);
+        }
+
+        /* Animations */
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .nav-links {
+                gap: 1.5rem;
+            }
+
+            .page-header,
+            section {
+                padding-left: 5%;
+                padding-right: 5%;
+            }
+
+            .course-card {
+                grid-template-columns: 1fr;
+            }
+
+            .course-sidebar {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+
+    <nav>
+        <a href="index.html" class="nav-logo">R.</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="research.html">Research</a></li>
+            <li><a href="teaching.html" class="active">Teaching</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <header class="page-header">
+            <span class="page-label">Teaching</span>
+            <h1 class="page-title">Course Materials</h1>
+            <p class="page-description">
+                Lecture notes, computational labs, and resources for undergraduate and 
+                graduate courses in statistics and data science.
+            </p>
+        </header>
+
+        <section>
+            <div class="section-header">
+                <span class="section-number">01</span>
+                <h2 class="section-title">Current Courses</h2>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="courses-grid">
+                <div class="course-card">
+                    <div class="course-sidebar">
+                        <div>
+                            <div class="course-code">STAT 5XXX</div>
+                            <h3 class="course-name">Statistical Computing</h3>
+                        </div>
+                        <div class="course-semester">
+                            <span class="semester-dot"></span>
+                            Spring 2025
+                        </div>
+                    </div>
+                    <div class="course-content">
+                        <p class="course-description">
+                            Comprehensive introduction to computational methods for statistics, covering 
+                            numerical computation fundamentals, floating-point arithmetic, matrix decompositions, 
+                            optimization algorithms, and Monte Carlo methods.
+                        </p>
+                        <div class="course-topics">
+                            <div class="topics-label">Topics Covered</div>
+                            <div class="topics-list">
+                                <span class="topic-tag">Floating-Point Arithmetic</span>
+                                <span class="topic-tag">Matrix Decompositions</span>
+                                <span class="topic-tag">LU / Cholesky / QR</span>
+                                <span class="topic-tag">Eigendecomposition</span>
+                                <span class="topic-tag">Optimization</span>
+                                <span class="topic-tag">MCMC</span>
+                                <span class="topic-tag">Numerical Stability</span>
+                            </div>
+                        </div>
+                        <div class="course-materials">
+                            <a href="#" class="material-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14,2 14,8 20,8"/>
+                                </svg>
+                                Syllabus
+                            </a>
+                            <a href="#" class="material-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                                </svg>
+                                Lecture Notes
+                            </a>
+                            <a href="#" class="material-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="16,18 22,12 16,6"/>
+                                    <polyline points="8,6 2,12 8,18"/>
+                                </svg>
+                                Labs
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-sidebar">
+                        <div>
+                            <div class="course-code">STAT 4XXX</div>
+                            <h3 class="course-name">Introduction to Data Science</h3>
+                        </div>
+                        <div class="course-semester">
+                            <span class="semester-dot"></span>
+                            Spring 2025
+                        </div>
+                    </div>
+                    <div class="course-content">
+                        <p class="course-description">
+                            Foundational course covering the data science pipeline from data collection 
+                            and wrangling through exploratory analysis, modeling, and communication of results.
+                        </p>
+                        <div class="course-topics">
+                            <div class="topics-label">Topics Covered</div>
+                            <div class="topics-list">
+                                <span class="topic-tag">Data Wrangling</span>
+                                <span class="topic-tag">Visualization</span>
+                                <span class="topic-tag">Regression</span>
+                                <span class="topic-tag">Classification</span>
+                                <span class="topic-tag">Cross-Validation</span>
+                                <span class="topic-tag">R / Python</span>
+                            </div>
+                        </div>
+                        <div class="course-materials">
+                            <a href="#" class="material-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14,2 14,8 20,8"/>
+                                </svg>
+                                Syllabus
+                            </a>
+                            <a href="#" class="material-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                                </svg>
+                                Lecture Notes
+                            </a>
+                            <a href="#" class="material-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                    <line x1="3" y1="9" x2="21" y2="9"/>
+                                    <line x1="9" y1="21" x2="9" y2="9"/>
+                                </svg>
+                                Datasets
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="course-card">
+                    <div class="course-sidebar">
+                        <div>
+                            <div class="course-code">STAT 6XXX</div>
+                            <h3 class="course-name">Spatial Statistics</h3>
+                        </div>
+                        <div class="course-semester">
+                            <span class="semester-dot"></span>
+                            Fall 2025
+                        </div>
+                    </div>
+                    <div class="course-content">
+                        <p class="course-description">
+                            Graduate-level course on statistical methods for spatially referenced data, 
+                            including geostatistics, Gaussian processes, and scalable computational approaches.
+                        </p>
+                        <div class="course-topics">
+                            <div class="topics-label">Topics Covered</div>
+                            <div class="topics-list">
+                                <span class="topic-tag">Variograms</span>
+                                <span class="topic-tag">Kriging</span>
+                                <span class="topic-tag">Gaussian Processes</span>
+                                <span class="topic-tag">Covariance Functions</span>
+                                <span class="topic-tag">Fixed Rank Methods</span>
+                                <span class="topic-tag">Large Datasets</span>
+                            </div>
+                        </div>
+                        <div class="course-materials">
+                            <a href="#" class="material-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14,2 14,8 20,8"/>
+                                </svg>
+                                Syllabus
+                            </a>
+                            <a href="#" class="material-link">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                                </svg>
+                                Lecture Notes
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="section-header">
+                <span class="section-number">02</span>
+                <h2 class="section-title">Resources</h2>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="resources-grid">
+                <a href="#" class="resource-card">
+                    <div class="resource-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="16,18 22,12 16,6"/>
+                            <polyline points="8,6 2,12 8,18"/>
+                        </svg>
+                    </div>
+                    <h3 class="resource-title">R Code Repository</h3>
+                    <p class="resource-desc">Example code and computational labs in R for all courses.</p>
+                </a>
+
+                <a href="#" class="resource-card">
+                    <div class="resource-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polygon points="10,8 16,12 10,16 10,8"/>
+                        </svg>
+                    </div>
+                    <h3 class="resource-title">Video Lectures</h3>
+                    <p class="resource-desc">Recorded lectures and supplementary video content.</p>
+                </a>
+
+                <a href="#" class="resource-card">
+                    <div class="resource-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
+                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+                        </svg>
+                    </div>
+                    <h3 class="resource-title">Reading Lists</h3>
+                    <p class="resource-desc">Recommended textbooks and papers for each course.</p>
+                </a>
+
+                <a href="#" class="resource-card">
+                    <div class="resource-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="3" y1="9" x2="21" y2="9"/>
+                            <line x1="9" y1="21" x2="9" y2="9"/>
+                        </svg>
+                    </div>
+                    <h3 class="resource-title">Practice Datasets</h3>
+                    <p class="resource-desc">Curated datasets for hands-on practice and assignments.</p>
+                </a>
+            </div>
+        </section>
+
+        <section>
+            <div class="section-header">
+                <span class="section-number">03</span>
+                <h2 class="section-title">Office Hours</h2>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="office-hours">
+                <h3>Weekly Schedule</h3>
+                <div class="hours-item">
+                    <span class="hours-day">Tuesday</span>
+                    <span class="hours-time">2:00 – 4:00 PM</span>
+                </div>
+                <div class="hours-item">
+                    <span class="hours-day">Thursday</span>
+                    <span class="hours-time">10:00 AM – 12:00 PM</span>
+                </div>
+                <div class="hours-item">
+                    <span class="hours-day">By Appointment</span>
+                    <span class="hours-time">Email to schedule</span>
+                </div>
+                <p class="hours-note">
+                    Office location: Department of Mathematical Sciences, Room XXX
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <span class="footer-text">© 2025 — UPRM</span>
+            <nav class="footer-nav">
+                <a href="index.html">Home</a>
+                <a href="research.html">Research</a>
+            </nav>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research | Rob</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #1a1a2e;
+            --paper: #faf9f7;
+            --accent: #2d5a7b;
+            --accent-light: #4a7c9b;
+            --muted: #6b7280;
+            --grid: rgba(45, 90, 123, 0.08);
+            --highlight: #e8f1f5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background: var(--paper);
+            color: var(--ink);
+            line-height: 1.7;
+            font-weight: 400;
+            overflow-x: hidden;
+        }
+
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            background-image: 
+                linear-gradient(var(--grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+            background-size: 60px 60px;
+            opacity: 0.7;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: linear-gradient(to bottom, var(--paper) 60%, transparent);
+        }
+
+        .nav-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--ink);
+            text-decoration: none;
+            letter-spacing: -0.02em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--muted);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a.active {
+            color: var(--accent);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--accent);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        main {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Page header */
+        .page-header {
+            padding: 10rem 8% 5rem;
+            max-width: 900px;
+        }
+
+        .page-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeSlideUp 0.8s ease forwards;
+            animation-delay: 0.2s;
+        }
+
+        .page-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 400;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeSlideUp 0.8s ease forwards;
+            animation-delay: 0.4s;
+        }
+
+        .page-description {
+            font-size: 1.15rem;
+            color: var(--muted);
+            max-width: 600px;
+            opacity: 0;
+            animation: fadeSlideUp 0.8s ease forwards;
+            animation-delay: 0.6s;
+        }
+
+        /* Section styling */
+        section {
+            padding: 4rem 8%;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: baseline;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .section-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--accent);
+        }
+
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-weight: 400;
+            letter-spacing: -0.02em;
+        }
+
+        .section-line {
+            flex: 1;
+            height: 1px;
+            background: var(--grid);
+        }
+
+        /* Research areas */
+        .research-areas {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .area-card {
+            background: white;
+            border: 1px solid rgba(0,0,0,0.06);
+            padding: 2rem;
+            position: relative;
+        }
+
+        .area-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+        }
+
+        .area-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2rem;
+            color: var(--grid);
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .area-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .area-desc {
+            color: var(--muted);
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        /* Publications */
+        .publications-list {
+            max-width: 900px;
+        }
+
+        .publication {
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--grid);
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 2rem;
+        }
+
+        .publication:last-child {
+            border-bottom: none;
+        }
+
+        .pub-year {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--accent);
+            padding-top: 0.3rem;
+        }
+
+        .pub-content h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .pub-authors {
+            font-size: 0.9rem;
+            color: var(--muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .pub-venue {
+            font-size: 0.85rem;
+            font-style: italic;
+            color: var(--muted);
+            margin-bottom: 1rem;
+        }
+
+        .pub-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .pub-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.3rem 0.6rem;
+            background: var(--highlight);
+            color: var(--accent);
+        }
+
+        /* Current projects */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+
+        .project-card {
+            background: white;
+            border: 1px solid rgba(0,0,0,0.06);
+            padding: 2.5rem;
+            position: relative;
+            transition: all 0.4s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+        }
+
+        .project-status {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .project-status::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .project-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        .project-desc {
+            color: var(--muted);
+            font-size: 0.95rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .project-meta {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--muted);
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 8%;
+            border-top: 1px solid var(--grid);
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--muted);
+            letter-spacing: 0.05em;
+        }
+
+        .footer-nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .footer-nav a {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--muted);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: color 0.3s ease;
+        }
+
+        .footer-nav a:hover {
+            color: var(--accent);
+        }
+
+        /* Animations */
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 1.5rem;
+            }
+
+            .nav-links {
+                gap: 1.5rem;
+            }
+
+            .page-header,
+            section {
+                padding-left: 5%;
+                padding-right: 5%;
+            }
+
+            .publication {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .pub-year {
+                padding-top: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+
+    <nav>
+        <a href="index.html" class="nav-logo">R.</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="research.html" class="active">Research</a></li>
+            <li><a href="teaching.html">Teaching</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <header class="page-header">
+            <span class="page-label">Research</span>
+            <h1 class="page-title">Data Science & Statistical Methods</h1>
+            <p class="page-description">
+                My research focuses on developing scalable computational methods for spatial statistics, 
+                with emphasis on uncertainty quantification for massive non-Gaussian datasets.
+            </p>
+        </header>
+
+        <section>
+            <div class="section-header">
+                <span class="section-number">01</span>
+                <h2 class="section-title">Research Areas</h2>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="research-areas">
+                <div class="area-card">
+                    <div class="area-number">01</div>
+                    <h3 class="area-title">Gaussian Process Regression</h3>
+                    <p class="area-desc">
+                        Scalable algorithms for GP regression including Fixed Rank Kriging, 
+                        low-rank approximations, and efficient computational methods for large spatial datasets.
+                    </p>
+                </div>
+
+                <div class="area-card">
+                    <div class="area-number">02</div>
+                    <h3 class="area-title">Non-Gaussian Processes</h3>
+                    <p class="area-desc">
+                        Fixed Rank Non-Gaussian Process Regression (FRNGPR) methods for κ-lognormal 
+                        and other non-Gaussian distributions in spatial modeling.
+                    </p>
+                </div>
+
+                <div class="area-card">
+                    <div class="area-number">03</div>
+                    <h3 class="area-title">Uncertainty Quantification</h3>
+                    <p class="area-desc">
+                        Optimal prediction and uncertainty quantification methods for massive datasets, 
+                        with focus on computational efficiency and statistical rigor.
+                    </p>
+                </div>
+
+                <div class="area-card">
+                    <div class="area-number">04</div>
+                    <h3 class="area-title">Multivariate Spatial Modeling</h3>
+                    <p class="area-desc">
+                        Efficient algorithms for multivariate spatial processes, coregionalization models, 
+                        and cross-covariance estimation at scale.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="section-header">
+                <span class="section-number">02</span>
+                <h2 class="section-title">Current Projects</h2>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-status">Active</div>
+                    <h3 class="project-title">FRNGPR for κ-Lognormal Processes</h3>
+                    <p class="project-desc">
+                        Developing Fixed Rank Non-Gaussian Process Regression methodology for κ-lognormal 
+                        distributions, enabling scalable optimal prediction with non-Gaussian data while 
+                        maintaining rigorous uncertainty quantification.
+                    </p>
+                    <div class="project-meta">NSF Statistics Program Proposal</div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-status">Active</div>
+                    <h3 class="project-title">Scalable UQ for Massive Spatial Data</h3>
+                    <p class="project-desc">
+                        Creating computationally efficient uncertainty quantification methods that scale 
+                        to millions of observations while preserving statistical validity and interpretability.
+                    </p>
+                    <div class="project-meta">Methodological Development</div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="section-header">
+                <span class="section-number">03</span>
+                <h2 class="section-title">Selected Publications</h2>
+                <div class="section-line"></div>
+            </div>
+
+            <div class="publications-list">
+                <div class="publication">
+                    <div class="pub-year">2024</div>
+                    <div class="pub-content">
+                        <h3>Scalable Fixed Rank Kriging for Large Spatial Datasets</h3>
+                        <p class="pub-authors">Author names</p>
+                        <p class="pub-venue">Journal of Computational and Graphical Statistics</p>
+                        <div class="pub-tags">
+                            <span class="pub-tag">Spatial Statistics</span>
+                            <span class="pub-tag">Scalable Methods</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="publication">
+                    <div class="pub-year">2023</div>
+                    <div class="pub-content">
+                        <h3>Uncertainty Quantification in Non-Gaussian Spatial Processes</h3>
+                        <p class="pub-authors">Author names</p>
+                        <p class="pub-venue">Spatial Statistics</p>
+                        <div class="pub-tags">
+                            <span class="pub-tag">Non-Gaussian</span>
+                            <span class="pub-tag">UQ</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="publication">
+                    <div class="pub-year">2022</div>
+                    <div class="pub-content">
+                        <h3>Efficient Algorithms for Multivariate Spatial Prediction</h3>
+                        <p class="pub-authors">Author names</p>
+                        <p class="pub-venue">Computational Statistics & Data Analysis</p>
+                        <div class="pub-tags">
+                            <span class="pub-tag">Multivariate</span>
+                            <span class="pub-tag">Algorithms</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p style="margin-top: 2rem; color: var(--muted); font-size: 0.9rem; font-style: italic;">
+                * Publication list is a placeholder — update with your actual publications
+            </p>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <span class="footer-text">© 2025 — UPRM</span>
+            <nav class="footer-nav">
+                <a href="index.html">Home</a>
+                <a href="teaching.html">Teaching</a>
+            </nav>
+        </div>
+    </footer>
+</body>
+</html>
